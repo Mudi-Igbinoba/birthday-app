@@ -1,0 +1,39 @@
+* {
+    scroll-behavior: smooth;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #ffe9c8;
+    color: #434343;
+    font-family: 'Raleway', sans-serif;
+    line-height: 1.4;
+    font-size: 1.125rem;
+    font-weight: 500;
+    height: 100vh;
+    text-align: center;
+}
+
+.btn {
+    font-family: 'Berkshire Swash', cursive;
+    border-radius: 15px;
+    font-size: 1.125rem;
+}
+
+.btn:focus {
+    outline: none;
+}
+
+.btn:focus-visible {
+    box-shadow: none;
+}
+
+.btn:active {
+    box-shadow: inset 5px 5px 10px -3px rgba(0, 0, 0, 0.7);
+}

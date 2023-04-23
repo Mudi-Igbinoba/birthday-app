@@ -1,0 +1,14 @@
+.modals .modal-content {
+    background: #fff2de;
+    border-radius: 15px;
+}
+
+.modals h3 {
+    font-family: 'Berkshire Swash', cursive;
+    color: #c62828;
+}
+
+.modals #addModal .btn {
+    background-color: #ef5177;
+    border: 1px solid #ef5177;
+}

@@ -1,0 +1,17 @@
+#home h1,
+#home h2 {
+    font-family: 'Berkshire Swash', cursive;
+    color: #c62828;
+}
+
+#home #addBtn {
+    background-color: #ef5177;
+    border: 1px solid #ef5177;
+    width: 300px;
+}
+
+#home #listBtn {
+    background-color: #f48fb1;
+    border: 1px solid #f48fb1;
+    width: 300px;
+}
