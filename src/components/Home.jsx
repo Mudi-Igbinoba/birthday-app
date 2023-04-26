@@ -1,11 +1,56 @@
-import { useState } from 'react';
+import moment from 'moment';
+import { useEffect, useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
+import Moment from 'react-moment';
 import AddModal from './AddModal';
 import './home.css';
 import ListModal from './ListModal';
 
 const Home = () => {
     const [showAddModal, setShowAddModal] = useState(false);
+    const [birthdayData, setBirthdayData] = useState();
+    const [todayData, setTodayData] = useState();
+    const date = moment().format('MM-DD');
+    const [birthdaysToday, setBirthdaysToday] = useState();
+
+    const fetchBirthdays = () => {
+        fetch('http://localhost:3000/birthdays')
+            .then((res) => res.json())
+            .then((data) => {
+                setBirthdayData(data);
+            });
+    };
+    console.log(birthdayData);
+
+    useEffect(() => {
+        fetchBirthdays();
+    }, []);
+
+    useEffect(() => {
+        if (birthdayData && birthdayData.length > 0) {
+            setBirthdaysToday(
+                birthdayData.filter(
+                    (e) => moment(e.date).format('MM-DD') === date
+                )
+            );
+        } else if (birthdayData && birthdayData.length === 0) {
+            setTodayData(<p>No birthdays saved</p>);
+        }
+    }, [birthdayData]);
+
+    useEffect(() => {
+        if (birthdaysToday && birthdaysToday.length > 0) {
+            setTodayData(
+                birthdaysToday.map((e) => (
+                    <p key={e.id}>
+                        {e.fullName} - {moment(e.date).format('Do MMM YYYY')}
+                    </p>
+                ))
+            );
+        } else if (birthdaysToday && birthdaysToday.length === 0) {
+            setTodayData(<p>Sadly, there are no birthdays today 😢</p>);
+        }
+    }, [birthdaysToday]);
 
     const handleCloseAddModal = () => setShowAddModal(false);
     const handleShowAddModal = () => setShowAddModal(true);
@@ -29,11 +74,8 @@ const Home = () => {
                     Today’s Birthdays
                 </h2>
 
-                <section id='todayBirthdays' className='mb-5'>
-                    <p>Sadly, there are no birthdays today 🥺</p>
-                    {/* <p>Beth - 12/11/1999</p>
-                    <p>Shanaya - 12/11/1999</p>
-                    <p>Troy - 12/11/1999</p> */}
+                <section id='todayBirthdays' className='mb-5 text-capitalize'>
+                    {todayData}
                 </section>
 
                 <p className='mb-4'>
@@ -50,6 +92,8 @@ const Home = () => {
                 <AddModal
                     show={showAddModal}
                     handleClose={handleCloseAddModal}
+                    bData={birthdayData}
+                    fetchBDay={fetchBirthdays}
                 />
 
                 <Button
@@ -62,6 +106,8 @@ const Home = () => {
                 <ListModal
                     show={showListModal}
                     handleClose={handleCloseListModal}
+                    bData={birthdayData}
+                    fetchBDay={fetchBirthdays}
                 />
             </Container>
         </main>

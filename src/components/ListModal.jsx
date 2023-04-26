@@ -1,7 +1,8 @@
+import moment from 'moment';
 import { Modal, Table } from 'react-bootstrap';
 import './modals.css';
 
-const ListModal = ({ show, handleClose }) => {
+const ListModal = ({ show, handleClose, bData }) => {
     return (
         <>
             <Modal
@@ -21,22 +22,28 @@ const ListModal = ({ show, handleClose }) => {
                     <Table striped hover responsive className='border-dark'>
                         <thead>
                             <tr>
-                                <th>#</th>
                                 <th>Name</th>
                                 <th>Birthday</th>
                             </tr>
                         </thead>
+
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                            </tr>
+                            {bData ? (
+                                bData.map((e) => (
+                                    <tr key={e.id}>
+                                        <td className='text-capitalize'>
+                                            {e.fullName}
+                                        </td>
+                                        <td>
+                                            {moment(e.date).format(
+                                                'Do MMM YYYY'
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr></tr>
+                            )}
                         </tbody>
                     </Table>
                 </Modal.Body>
