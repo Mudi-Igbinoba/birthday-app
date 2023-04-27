@@ -40,13 +40,16 @@ const AddModal = ({ show, handleClose, bData, fetchBDay }) => {
 
     useEffect(() => {
         if (submit) {
-            fetch('http://localhost:3000/birthdays', {
-                method: 'POST',
-                body: JSON.stringify(formData),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+            fetch(
+                'https://my-json-server.typicode.com/Mudi-Igbinoba/birthday-app-json-server/birthdays',
+                {
+                    method: 'POST',
+                    body: JSON.stringify(formData),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
 
             fetchBDay();
 

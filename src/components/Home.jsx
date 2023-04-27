@@ -14,7 +14,9 @@ const Home = () => {
     const [birthdaysToday, setBirthdaysToday] = useState();
 
     const fetchBirthdays = () => {
-        fetch('http://localhost:3000/birthdays')
+        fetch(
+            'https://my-json-server.typicode.com/Mudi-Igbinoba/birthday-app-json-server/birthdays'
+        )
             .then((res) => res.json())
             .then((data) => {
                 setBirthdayData(data);
