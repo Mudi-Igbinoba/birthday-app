@@ -9,7 +9,8 @@
         "build": "vite build",
         "preview": "vite preview",
         "predeploy": "npm run build",
-        "deploy": "gh-pages -d dist"
+        "deploy": "gh-pages -d dist",
+        "server": "npx json-server --watch db.json"
     },
     "dependencies": {
         "bootstrap": "^5.2.3",
