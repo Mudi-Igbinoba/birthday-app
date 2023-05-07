@@ -11,7 +11,7 @@
         "preview": "vite preview",
         "predeploy": "npm run build",
         "deploy": "gh-pages -d dist",
-        "server": "npx json-server --watch db.json"
+        "server": "npx json-server --watch db.json --port 3000"
     },
     "dependencies": {
         "bootstrap": "^5.2.3",
