@@ -2,7 +2,7 @@ import moment from 'moment';
 import { Modal, Table } from 'react-bootstrap';
 import './modals.css';
 
-const ListModal = ({ show, handleClose, bData }) => {
+const ListModal = ({ show, handleClose, data }) => {
     return (
         <>
             <Modal
@@ -28,8 +28,8 @@ const ListModal = ({ show, handleClose, bData }) => {
                         </thead>
 
                         <tbody>
-                            {bData ? (
-                                bData.map((e) => (
+                            {data ? (
+                                data.map((e) => (
                                     <tr key={e.id}>
                                         <td className='text-capitalize'>
                                             {e.fullName}

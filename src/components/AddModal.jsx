@@ -1,13 +1,9 @@
-import { nanoid } from 'nanoid';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, Col, FloatingLabel, Form, Modal, Row } from 'react-bootstrap';
 import './modals.css';
 
-const AddModal = ({ show, handleClose, bData, fetchBDay }) => {
-    const [submit, setSubmit] = useState(false);
-
+const AddModal = ({ show, handleClose, data, birthdays }) => {
     const [formData, setFormData] = useState({
-        id: nanoid(),
         fullName: '',
         date: '',
     });
@@ -21,61 +17,31 @@ const AddModal = ({ show, handleClose, bData, fetchBDay }) => {
         });
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        const bool = bData.find(
+        const bool = data.find(
             (obj) =>
                 obj.fullName.toLowerCase() ===
                     formData.fullName.toLowerCase() &&
                 obj.date === formData.date
         );
         if (!bool) {
-            setSubmit(true);
+            await birthdays.add({
+                fullName: formData.fullName,
+                date: formData.date,
+            });
             alert('Birthday successfully added!');
+            setFormData((prevFormData) => {
+                return {
+                    fullName: '',
+                    date: '',
+                };
+            });
             handleClose();
         } else {
             alert("Birthday already exists and can't be saved");
         }
     };
-
-    useEffect(() => {
-        if (submit) {
-            fetch('http://localhost:3000/birthdays', {
-                method: 'POST',
-                body: JSON.stringify(formData),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            fetchBDay();
-
-            setFormData((prevFormData) => {
-                return {
-                    id: nanoid(),
-                    fullName: '',
-                    date: '',
-                };
-            });
-            setSubmit(false);
-        }
-
-        // fetch('http://localhost:3000/birthdays/Xt9maqWM-7FTYxY1I8aEj', {
-        //     method: 'DELETE',
-        // });
-
-        // fetch('http://localhost:3000/birthdays/3', {
-        //     method: 'PUT',
-        //     body: JSON.stringify({
-        //         id: 3,
-        //         fullName: 'Troy',
-        //         date: '1999-11-14',
-        //     }),
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        // });
-    }, [submit]);
 
     return (
         <>

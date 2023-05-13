@@ -1,56 +1,27 @@
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
-import Moment from 'react-moment';
 import AddModal from './AddModal';
 import './home.css';
 import ListModal from './ListModal';
+import Dexie from 'dexie';
+import { useLiveQuery } from 'dexie-react-hooks';
 
+const db = new Dexie('birthdayApp');
+db.version(1).stores({
+    birthdays: '++id,fullName,date',
+});
+const { birthdays } = db;
 const Home = () => {
+    const allItems = useLiveQuery(() => birthdays.toArray(), []);
+
     const [showAddModal, setShowAddModal] = useState(false);
-    const [birthdayData, setBirthdayData] = useState();
-    const [todayData, setTodayData] = useState();
     const date = moment().format('MM-DD');
-    const [birthdaysToday, setBirthdaysToday] = useState();
 
-    const fetchBirthdays = () => {
-        fetch('http://localhost:3000/birthdays')
-            .then((res) => res.json())
-            .then((data) => {
-                setBirthdayData(data);
-            });
-    };
-    console.log(birthdayData);
-
-    useEffect(() => {
-        fetchBirthdays();
-    }, []);
-
-    useEffect(() => {
-        if (birthdayData && birthdayData.length > 0) {
-            setBirthdaysToday(
-                birthdayData.filter(
-                    (e) => moment(e.date).format('MM-DD') === date
-                )
-            );
-        } else if (birthdayData && birthdayData.length === 0) {
-            setTodayData(<p>No birthdays saved</p>);
-        }
-    }, [birthdayData]);
-
-    useEffect(() => {
-        if (birthdaysToday && birthdaysToday.length > 0) {
-            setTodayData(
-                birthdaysToday.map((e) => (
-                    <p key={e.id}>
-                        {e.fullName} - {moment(e.date).format('Do MMM YYYY')}
-                    </p>
-                ))
-            );
-        } else if (birthdaysToday && birthdaysToday.length === 0) {
-            setTodayData(<p>Sadly, there are no birthdays today 😢</p>);
-        }
-    }, [birthdaysToday]);
+    // eslint-disable-next-line no-unused-vars
+    const birthdaysToday = allItems?.filter(
+        (e) => moment(e.date).format('MM-DD') === date
+    );
 
     const handleCloseAddModal = () => setShowAddModal(false);
     const handleShowAddModal = () => setShowAddModal(true);
@@ -75,7 +46,22 @@ const Home = () => {
                 </h2>
 
                 <section id='todayBirthdays' className='mb-5 text-capitalize'>
-                    {todayData}
+                    {allItems && birthdaysToday.length > 0 ? (
+                        birthdaysToday.map((e) => {
+                            return (
+                                <p key={e.id}>
+                                    {e.fullName} -{' '}
+                                    {moment(e.date).format('Do MMM YYYY')}
+                                </p>
+                            );
+                        })
+                    ) : allItems &&
+                      allItems.length > 0 &&
+                      birthdaysToday.length === 0 ? (
+                        <p>Sadly, there are no birthdays today 😢</p>
+                    ) : (
+                        <p>No birthdays saved</p>
+                    )}
                 </section>
 
                 <p className='mb-4'>
@@ -92,8 +78,8 @@ const Home = () => {
                 <AddModal
                     show={showAddModal}
                     handleClose={handleCloseAddModal}
-                    bData={birthdayData}
-                    fetchBDay={fetchBirthdays}
+                    data={allItems}
+                    birthdays={birthdays}
                 />
 
                 <Button
@@ -106,8 +92,7 @@ const Home = () => {
                 <ListModal
                     show={showListModal}
                     handleClose={handleCloseListModal}
-                    bData={birthdayData}
-                    fetchBDay={fetchBirthdays}
+                    data={allItems}
                 />
             </Container>
         </main>
